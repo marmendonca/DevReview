@@ -18,13 +18,17 @@ namespace DevReviews.API.Persistence.Migrations
             modelBuilder.Entity<Product>(p =>
             {
                 p.ToTable("tb_Product");
-                p.HasKey(p => p.Id);
+                p.HasKey(p => p.Id);    
+                p.HasMany(p => p.Reviews).WithOne(r => r.Product).HasForeignKey(r => r.ProductId).OnDelete(DeleteBehavior.Restrict);
             });
 
             modelBuilder.Entity<ProductReview>(pr =>
             {
                 pr.ToTable("tb_ProductReview");
                 pr.HasKey(pr => pr.Id);
+
+                pr.Property(pr => pr.Author)
+                    .HasMaxLength(50);
             });
         }
     }

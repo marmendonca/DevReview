@@ -1,6 +1,9 @@
+using DevReviews.API.Persistence.Migrations;
+using DevReviews.API.Persistence.Repositories;
 using DevReviews.API.Profiles;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -22,6 +25,12 @@ namespace DevReviews.API
         {
             // Pegando o valor da connection criada a partir do user-secrets
             var connectionString = Configuration.GetValue<string>("DevReviewsCn");
+
+            services.AddDbContext<DataContext>(opt => opt.UseInMemoryDatabase("Database"));
+            // Adicionando a variável connectionString a minha utilizalção do Sql.
+            // services.AddDbContext<DataContext>(opt => opt.UseSqlServer(connectionString));
+
+            services.AddScoped<IProductRepository, ProductRepository>();
 
             services.AddAutoMapper(typeof(ProductProfile));
 

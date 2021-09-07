@@ -24,5 +24,7 @@ namespace DevReviews.API.Entities
         public DateTime RegisterAt { get; private set; }
 
         public int ProductId { get; private set; }
+
+        public Product Product { get; set; }
     }
 }

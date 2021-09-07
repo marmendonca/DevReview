@@ -1,6 +1,9 @@
 ﻿using AutoMapper;
+using DevReviews.API.Entities;
 using DevReviews.API.Models;
+using DevReviews.API.Persistence.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace DevReviews.API.Controllers
 {
@@ -9,23 +12,33 @@ namespace DevReviews.API.Controllers
     public class ProductReviewsController : ControllerBase
     {
         private readonly IMapper _mapper;
+        private readonly IProductRepository _repository;
 
-        public ProductReviewsController(IMapper mapper)
+        public ProductReviewsController(IProductRepository repository, IMapper mapper)
         {
             _mapper = mapper;
+            _repository = repository;
         }
+
         [HttpGet("{id}")]
-        public IActionResult GetById(int productId, int id)
+        public async Task<IActionResult> GetById(int productId, int id)
         {
-            //var productDetails = _mapper.Map<ProductReviewDetailsViewModel>(productReview);
-            return Ok();
+            var productReview = await _repository.GetReviewByIdAsync(id);
+
+            if (productReview == null)
+                return NotFound();
+
+            var productDetails = _mapper.Map<ProductReviewDetailsViewModel>(productReview);
+            return Ok(productDetails);
         }
 
         [HttpPost]
         [Route("")]
-        public IActionResult Post([FromBody]AddProductReviewInputModel model)
+        public async Task<IActionResult> Post(int productId, [FromBody]AddProductReviewInputModel model)
         {
-            return CreatedAtAction(nameof(GetById), new { id = 1, productId = 1 }, model); 
+            var productReview = new ProductReview(model.Author, model.Rating, model.Comments, productId);
+            await _repository.AddReviewAsync(productReview);
+            return CreatedAtAction(nameof(GetById), new { id = productReview.Id, productId = productId }, model);
         }
     }
 }
