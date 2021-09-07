@@ -20,6 +20,9 @@ namespace DevReviews.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // Pegando o valor da connection criada a partir do user-secrets
+            var connectionString = Configuration.GetValue<string>("DevReviewsCn");
+
             services.AddAutoMapper(typeof(ProductProfile));
 
             services.AddControllers();
