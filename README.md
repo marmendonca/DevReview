@@ -1,4 +1,4 @@
-# Projeto da Jornada .Net com Luis Dev.
+# Jornada .Net com Luis Dev.
 
 - Foi desenvolvida uma API REST completa de gerenciamento de produtos e suas avaliações de um e-Commerce.
 
