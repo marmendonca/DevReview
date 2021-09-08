@@ -8,6 +8,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using System;
+using System.IO;
+using System.Reflection;
 
 namespace DevReviews.API
 {
@@ -37,7 +40,20 @@ namespace DevReviews.API
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "DevReviews.API", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo {
+                    Title = "DevReviews.API", 
+                    Version = "v1",
+                    Contact = new OpenApiContact
+                    {
+                        Name = "Marilia Dev",
+                        Email = "marilianobre1@gmail.com",
+                        Url = new Uri("")
+                    }
+                });
+
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath);
             });
         }
 
